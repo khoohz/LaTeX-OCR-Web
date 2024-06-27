@@ -10,6 +10,7 @@ from sympy import symbols
 import tqdm
 import io
 import requests
+from munch import Munch
 
 if 'latex_code' not in st.session_state:
     st.session_state['latex_code'] = ''
@@ -142,26 +143,23 @@ def download_as_bytes_with_progress(url: str, name: str = None) -> bytes:
     return bio.getvalue()
 
 
-def download_checkpoints(path):
+def download_checkpoints(path: str):
     tag = get_latest_tag()
+    os.makedirs(path, exist_ok=True)
     print('download weights', tag, 'to path', path)
-    weights = 'https://github.com/lukas-blecher/LaTeX-OCR/releases/download/%s/weights.pth' % tag
-    resizer = 'https://github.com/lukas-blecher/LaTeX-OCR/releases/download/%s/image_resizer.pth' % tag
+    weights = f'https://github.com/lukas-blecher/LaTeX-OCR/releases/download/{tag}/weights.pth'
+    resizer = f'https://github.com/lukas-blecher/LaTeX-OCR/releases/download/{tag}/image_resizer.pth'
     for url, name in zip([weights, resizer], ['weights.pth', 'image_resizer.pth']):
         file = download_as_bytes_with_progress(url, name)
-        open(os.path.join(path, name), "wb").write(file)
+        with open(os.path.join(path, name), "wb") as f:
+            f.write(file)
 
-def download_checkpoints_custom_path():
-    path = './weights'
-    os.makedirs(path, exist_ok=True)
-    download_checkpoints(path=path)
-        
 class CustomLatexOCR(LatexOCR):
     def __init__(self):
-        download_checkpoints_custom_path()
-        super().__init__()
-        self.checkpoint_dir = './weights'
-        self.config['path']['checkpoint'] = self.checkpoint_dir
+        checkpoint_dir = './weights'
+        download_checkpoints(checkpoint_dir)
+        super().__init__(arguments=Munch({'config': 'settings/config.yaml', 'checkpoint': os.path.join(checkpoint_dir, 'weights.pth'), 'no_cuda': True, 'no_resize': False}))
+        self.checkpoint_dir = checkpoint_dir
 
 def main():
     st.set_page_config(page_title='LaTeX-OCR')
