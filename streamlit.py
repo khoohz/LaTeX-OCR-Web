@@ -142,7 +142,7 @@ def download_as_bytes_with_progress(url: str, name: str = None) -> bytes:
     return bio.getvalue()
 
 
-def download_checkpoints_custom_path():
+def download_checkpoints():
     tag = get_latest_tag()
     path = './weights'
     print('download weights', tag, 'to path', path)
@@ -151,11 +151,18 @@ def download_checkpoints_custom_path():
     for url, name in zip([weights, resizer], ['weights.pth', 'image_resizer.pth']):
         file = download_as_bytes_with_progress(url, name)
         open(os.path.join(path, name), "wb").write(file)
+
+def download_checkpoints_custom_path():
+    path = './weights'
+    os.makedirs(path, exist_ok=True)
+    download_checkpoints(path=path)
         
 class CustomLatexOCR(LatexOCR):
     def __init__(self):
         download_checkpoints_custom_path()
         super().__init__()
+        self.checkpoint_dir = './weights'
+        self.config['path']['checkpoint'] = self.checkpoint_dir
 
 def main():
     st.set_page_config(page_title='LaTeX-OCR')
