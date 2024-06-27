@@ -156,7 +156,7 @@ def download_checkpoints(path: str):
 
 class CustomLatexOCR(LatexOCR):
     def __init__(self):
-        checkpoint_dir = './weights'
+        checkpoint_dir = os.path.expanduser('~/latex_ocr_weights')
         download_checkpoints(checkpoint_dir)
         super().__init__(arguments=Munch({'config': 'settings/config.yaml', 'checkpoint': os.path.join(checkpoint_dir, 'weights.pth'), 'no_cuda': True, 'no_resize': False}))
         self.checkpoint_dir = checkpoint_dir
