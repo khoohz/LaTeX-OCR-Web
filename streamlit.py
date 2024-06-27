@@ -89,9 +89,9 @@ def extract_variables():
       # showVariableInputs(filtered_variables_list)
         
     except LaTeXParsingError as e:
-        st.error("LaTeX parsing error", e)
+        st.error("LaTeX parsing error" + str(e))
     except Exception as e:
-        st.error("Error", e)
+        st.error("Error: " + str(e))
   
 def calculate():
     try:
