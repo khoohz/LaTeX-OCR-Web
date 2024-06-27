@@ -142,9 +142,8 @@ def download_as_bytes_with_progress(url: str, name: str = None) -> bytes:
     return bio.getvalue()
 
 
-def download_checkpoints():
+def download_checkpoints(path):
     tag = get_latest_tag()
-    path = './weights'
     print('download weights', tag, 'to path', path)
     weights = 'https://github.com/lukas-blecher/LaTeX-OCR/releases/download/%s/weights.pth' % tag
     resizer = 'https://github.com/lukas-blecher/LaTeX-OCR/releases/download/%s/image_resizer.pth' % tag
