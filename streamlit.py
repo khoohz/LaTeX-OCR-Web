@@ -26,6 +26,8 @@ if 'solution' not in st.session_state:
 if 'lhs' not in st.session_state:
     st.session_state['lhs'] = None
 
+url = 'https://github.com/lukas-blecher/LaTeX-OCR/releases/latest'
+
 def update_latex(updated_code):
     st.session_state['latex_code'] = updated_code
     print("🚀 ~ st.session_state['latex_code']:", st.session_state['latex_code'])
