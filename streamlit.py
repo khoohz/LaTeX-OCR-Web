@@ -1,7 +1,9 @@
 import requests
 from PIL import Image
 import streamlit as st
+import os
 from pix2tex.cli import LatexOCR
+from pix2tex.model.checkpoints import get_latest_checkpoint
 from sympy.parsing.latex import parse_latex
 from sympy.parsing.latex.errors import LaTeXParsingError
 from sympy.solvers import solve
@@ -108,11 +110,21 @@ def calculate():
         print("Error in calculation:", e)
         st.error("Error in calculation")
 
+def download_checkpoints_custom_path():
+    path = './weights'
+    os.makedirs(path, exist_ok=True)
+    get_latest_checkpoint(path=path)
+
+class CustomLatexOCR(LatexOCR):
+    def __init__(self):
+        download_checkpoints_custom_path()
+        super().__init__()
+
 def main():
     st.set_page_config(page_title='LaTeX-OCR')
     st.title('LaTeX OCR')
     st.markdown('Convert images of equations to corresponding LaTeX code and perform calculations.\n\nThis is based on the `pix2tex` module. Check it out [![github](https://img.shields.io/badge/LaTeX--OCR-visit-a?style=social&logo=github)](https://github.com/lukas-blecher/LaTeX-OCR)')
-    model = LatexOCR()
+    model = CustomLatexOCR()
 
     uploaded_file = st.file_uploader('Upload an image of an equation', type=['png', 'jpg'])
 
