@@ -64,13 +64,13 @@ mypy-extensions==1.0.0
 networkx==3.2.1
 ninja==1.11.1.1
 numexpr==2.8.7
-numpy==1.26.0
+numpy==1.25.1
 openai==0.28.1
 opencv-python==4.9.0.80
 opencv-python-headless==4.9.0.80
 orjson==3.10.5
 packaging==23.2
-pandas==2.2.2
+pandas>2.0
 pdfminer.six==20221105
 pdfplumber==0.10.2
 Pillow==10.0.1
